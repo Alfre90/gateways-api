@@ -1,14 +1,13 @@
-﻿using System;
-using System.Net;
-
-namespace Gateways.Core.Entities
+﻿namespace Gateways.Core.Entities
 {
     /// <summary>
     /// Gateway
     /// </summary>
     public class Gateway
     {
-        public string SerialNumber { get; set; } = "";
+        public int Id { get; set; }
+
+        public string? SerialNumber { get; set; }
 
         public string? Name { get; set; }
 

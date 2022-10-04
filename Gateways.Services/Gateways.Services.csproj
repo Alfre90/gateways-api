@@ -1,43 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Gateways.Database\Gateways.Database.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-    <ProjectReference Include="..\Gateways.Core\Gateways.Core.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Gateways\" />
-    <None Remove="Devices\" />
-    <None Remove="Devices\Models\" />
-    <None Remove="Gateways\Models\" />
-    <None Remove="AutoMapper" />
-    <None Remove="AutoMapper.Extensions.Microsoft.DependencyInjection" />
-    <None Remove="AutoMapper.EF6" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Gateways\" />
-    <Folder Include="Devices\" />
-    <Folder Include="Devices\Models\" />
-    <Folder Include="Gateways\Models\" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="AutoMapper.EF6" Version="2.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="Humanizer.Core" Version="2.14.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
+    <PackageReference Include="Sieve" Version="2.5.5" />
   </ItemGroup>
+
   <ItemGroup>
-    <Content Update="Properties\launchSettings.json">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <ProjectReference Include="..\Gateways.Core\Gateways.Core.csproj" />
+    <ProjectReference Include="..\Gateways.Database\Gateways.Database.csproj" />
   </ItemGroup>
+
 </Project>

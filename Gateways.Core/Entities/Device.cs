@@ -1,5 +1,4 @@
-﻿using System;
-namespace Gateways.Core.Entities
+﻿namespace Gateways.Core.Entities
 {
     /// <summary>
     /// Device
@@ -8,7 +7,7 @@ namespace Gateways.Core.Entities
     {
         public int Uid { get; set; }
 
-        public string GatewaySerialNumber { get; set; } = "";
+        public int GatewayId { get; set; }
 
         public string? Vendor { get; set; }
 

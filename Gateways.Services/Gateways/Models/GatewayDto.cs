@@ -1,11 +1,23 @@
-﻿using System;
+﻿using Gateways.Core.Entities;
+using Gateways.Services.Common.Models;
+
 namespace Gateways.Services.Gateways.Models
 {
-    public class GatewayDto
+    /// <summary>
+    /// Gateway Dto
+    /// </summary>
+    public class GatewayDto : BaseEntityDto
     {
-        public GatewayDto()
-        {
-        }
+        ///<inheritdoc cref="Gateway.SerialNumber"/>
+        public string? SerialNumber { get; set; }
+
+        ///<inheritdoc cref="Gateway.Name"/>
+        public string? Name { get; set; }
+
+        ///<inheritdoc cref="Gateway.IPv4"/>
+        public string? IPv4 { get; set; }
+
+        ///<inheritdoc cref="Gateway.Devices"/>
+        public IEnumerable<Device>? Devices { get; set; }
     }
 }
-

@@ -7,14 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Gateways.Database\Gateways.Database.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-    <ProjectReference Include="..\Gateways.Core\Gateways.Core.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
-    <ProjectReference Include="..\Gateways.Services\Gateways.Services.csproj">
-      <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
-    </ProjectReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gateways.Core\Gateways.Core.csproj" />
+    <ProjectReference Include="..\Gateways.Database\Gateways.Database.csproj" />
+    <ProjectReference Include="..\Gateways.Services\Gateways.Services.csproj" />
   </ItemGroup>
 </Project>

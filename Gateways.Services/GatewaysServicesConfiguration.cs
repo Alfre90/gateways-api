@@ -1,5 +1,7 @@
 ﻿using System;
-using Microsoft.AspNetCore.Authentication;
+using Gateways.Services.Devices;
+using Gateways.Services.Gateways;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Gateways.Services
 {
@@ -11,8 +13,8 @@ namespace Gateways.Services
         /// <param name="services"></param>
         public static void AddGatewaysServicesConfiguration(this IServiceCollection services)
         {
-            services.AddScoped<ICompanyDescriptionService, CompanyDescriptionService>();
-            services.AddScoped<IWoResiduesService, WoResiduesService>();
+            services.AddScoped<IDevicesService, DevicesService>();
+            services.AddScoped<IGatewaysService, GatewaysService>();
         }
     }
 }

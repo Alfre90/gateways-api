@@ -1,11 +1,20 @@
-﻿using System;
+﻿using Gateways.Core.Entities;
+using Gateways.Services.Common.Models;
+
 namespace Gateways.Services.Devices.Models
 {
-    public class AddDeviceDto
+    /// <summary>
+    /// Add Device Dto
+    /// </summary>
+    public class AddDeviceDto : BaseDto
     {
-        public AddDeviceDto()
-        {
-        }
+        ///<inheritdoc cref="Device.GatewayId"/>
+        public int GatewayId { get; set; }
+
+        ///<inheritdoc cref="Device.Vendor"/>
+        public string? Vendor { get; set; }
+
+        ///<inheritdoc cref="Device.Status"/>
+        public bool Status { get; set; }
     }
 }
-
