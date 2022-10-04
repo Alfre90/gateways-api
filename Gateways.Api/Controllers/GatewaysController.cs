@@ -53,7 +53,7 @@ namespace Gateways.Api.Controllers
         /// <param name="cancellation">Cancellation Token</param>
         /// <returns>Dto</returns>
         [HttpPost]
-        public async Task<IActionResult> PostFee([FromBody] AddGatewayDto dto, CancellationToken cancellation = default)
+        public async Task<IActionResult> PostGateway([FromBody] AddGatewayDto dto, CancellationToken cancellation = default)
         {
             var gateway = await _service.Create(dto, cancellation);
             return CreatedAtAction(nameof(GetGateway), new { id = gateway.Id}, gateway);

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.IO;
+using System.Text.RegularExpressions;
 using FluentValidation;
 using Gateways.Core.Entities;
 using Gateways.Database;
@@ -12,21 +13,30 @@ namespace Gateways.Services.Validators.Entities
     /// </summary>
     public class GatewaysValidator : AbstractValidator<Gateway>
     {
-        string regexIpv4 ="(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])";
         /// <summary>
         /// Main constructor
         /// </summary>
         public GatewaysValidator(GatewaysContext _dbContext)
         {
-            RuleFor(x => x.IPv4).Matches(regexIpv4);
 
             RuleSet(nameof(ValidationAction.Add), () =>
             {
+                RuleFor(x => x.IPv4).Must(ip =>
+                    ip!.Split(".").Length == 4
+                            && !ip.Split(".").Any(
+                           x =>
+                           {
+                               int y;
+                               return Int32.TryParse(x, out y) && y > 255 || y < 1;
+                           })
+                    ).WithMessage("Ip Address is invalid.");
+
                 RuleFor(x => x.SerialNumber)
                    .NotNull()
                    .MustAsync(async (number, cancellation) =>
                    {
-                       return await _dbContext.Gateways!.AnyAsync(x => !x.SerialNumber!.Equals(number), cancellation);
+                       var gateway = await _dbContext.Gateways!.FirstOrDefaultAsync(x => x.SerialNumber!.Equals(number), cancellation);
+                       return gateway == null;
                    }).WithMessage("Gateway with this serial number already exist.");
             });
 
@@ -38,6 +48,16 @@ namespace Gateways.Services.Validators.Entities
                    {
                        return await _dbContext.Gateways!.AnyAsync(x => x.Id.Equals(id), cancellation);
                    }).WithMessage("Gateway does not exist.");
+
+                RuleFor(x => x.IPv4).Must(ip =>
+                   ip!.Split(".").Length == 4
+                           && !ip.Split(".").Any(
+                          x =>
+                          {
+                              int y;
+                              return Int32.TryParse(x, out y) && y > 255 || y < 1;
+                          })
+                   ).WithMessage("Ip Address is invalid.");
             });
 
             RuleSet(nameof(ValidationAction.Delete), () =>
