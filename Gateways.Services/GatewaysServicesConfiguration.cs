@@ -1,6 +1,8 @@
 ﻿using System;
+using FluentValidation;
 using Gateways.Services.Devices;
 using Gateways.Services.Gateways;
+using Gateways.Services.Validators.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Gateways.Services
@@ -15,6 +17,9 @@ namespace Gateways.Services
         {
             services.AddScoped<IDevicesService, DevicesService>();
             services.AddScoped<IGatewaysService, GatewaysService>();
+
+            //validators
+            services.AddValidatorsFromAssemblyContaining<GatewaysValidator>();
         }
     }
 }

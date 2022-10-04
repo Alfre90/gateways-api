@@ -14,6 +14,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
     <PackageReference Include="Sieve" Version="2.5.5" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,4 +23,16 @@
     <ProjectReference Include="..\Gateways.Database\Gateways.Database.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Common\Validations\" />
+    <None Remove="Validators\" />
+    <None Remove="Validators\Entities\" />
+    <None Remove="FluentValidation.AspNetCore" />
+    <None Remove="FluentValidation.DependencyInjectionExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Common\Validations\" />
+    <Folder Include="Validators\" />
+    <Folder Include="Validators\Entities\" />
+  </ItemGroup>
 </Project>

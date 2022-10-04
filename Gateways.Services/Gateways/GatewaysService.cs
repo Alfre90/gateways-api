@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
+using FluentValidation;
 using Gateways.Core.Entities;
 using Gateways.Database;
 using Gateways.Services.Common.Exceptions;
 using Gateways.Services.Common.Sieve.Extensions;
 using Gateways.Services.Common.Sieve.Pagination;
+using Gateways.Services.Common.Validations;
 using Gateways.Services.Gateways.Models;
 using Humanizer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Sieve.Models;
 using Sieve.Services;
-using System.ComponentModel.DataAnnotations;
 
 namespace Gateways.Services.Gateways
 {
@@ -23,6 +24,7 @@ namespace Gateways.Services.Gateways
         private readonly IMapper _mapper;
         private readonly ILogger<GatewaysService> _logger;
         private readonly ISieveProcessor _sieveProcessor;
+        private readonly IValidator<Gateway> _validator;
 
         /// <summary>
         /// Main constructor
@@ -31,12 +33,14 @@ namespace Gateways.Services.Gateways
             GatewaysContext context,
             IMapper mapper,
             ILogger<GatewaysService> logger,
-            ISieveProcessor sieveProcessor)
+            ISieveProcessor sieveProcessor,
+            IValidator<Gateway> validator)
         {
             _context = context;
             _mapper = mapper;
             _logger = logger;
             _sieveProcessor = sieveProcessor;
+            _validator = validator;
         }
 
         ///<inheritdoc/>
@@ -90,6 +94,8 @@ namespace Gateways.Services.Gateways
             {
                 var gateway = _mapper.Map<Gateway>(dto);
 
+                await ValidationUtils.ValidateAndThrow(ValidationUtils.CreateValidationContext(gateway, true, new string[] { ValidationAction.Add.ToString() }), _validator, cancellation);
+
                 var result = await _context.Gateways!.AddAsync(gateway, cancellation);
                 await _context.SaveChangesAsync(cancellation);
 
@@ -122,6 +128,8 @@ namespace Gateways.Services.Gateways
                 }
 
                 gateway = _mapper.Map(dto, gateway);
+
+                await ValidationUtils.ValidateAndThrow(ValidationUtils.CreateValidationContext(gateway, true, new string[] { ValidationAction.Update.ToString() }), _validator, cancellation);
 
                 await _context.SaveChangesAsync(cancellation);
                 _logger.LogInformation($"{nameof(Gateway).ToString().Humanize(LetterCasing.Title)} updated. Id: '{gateway!.Id}'");

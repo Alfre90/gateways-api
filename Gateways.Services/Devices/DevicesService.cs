@@ -7,10 +7,10 @@ using Humanizer;
 using Microsoft.Extensions.Logging;
 using Sieve.Models;
 using Sieve.Services;
-using System.ComponentModel.DataAnnotations;
 using Gateways.Services.Devices.Models;
 using Microsoft.EntityFrameworkCore;
 using Gateways.Services.Common.Sieve.Extensions;
+using FluentValidation;
 
 namespace Gateways.Services.Devices
 {
@@ -23,6 +23,7 @@ namespace Gateways.Services.Devices
         private readonly IMapper _mapper;
         private readonly ILogger<DevicesService> _logger;
         private readonly ISieveProcessor _sieveProcessor;
+        private readonly IValidator<Device> _validator;
 
         /// <summary>
         /// Main constructor
@@ -31,12 +32,14 @@ namespace Gateways.Services.Devices
             GatewaysContext context,
             IMapper mapper,
             ILogger<DevicesService> logger,
-            ISieveProcessor sieveProcessor)
+            ISieveProcessor sieveProcessor,
+            IValidator<Device> validator)
         {
             _context = context;
             _mapper = mapper;
             _logger = logger;
             _sieveProcessor = sieveProcessor;
+            _validator = validator;
         }
 
         ///<inheritdoc/>

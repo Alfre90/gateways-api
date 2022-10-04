@@ -1,4 +1,5 @@
 ﻿
+using FluentValidation;
 using Gateways.Database;
 using Gateways.Services;
 using Gateways.Services.Common.Sieve.DependencyInjection;
@@ -8,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
 var env = builder.Environment;
+
+//FluentValidation config
+ValidatorOptions.Global.LanguageManager.Enabled = false;
 
 // Add services to the container.
 
