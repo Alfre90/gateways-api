@@ -16,8 +16,5 @@ namespace Gateways.Services.Gateways.Models
 
         ///<inheritdoc cref="Gateway.IPv4"/>
         public string? IPv4 { get; set; }
-
-        ///<inheritdoc cref="Gateway.Devices"/>
-        public IEnumerable<Device>? Devices { get; set; }
     }
 }

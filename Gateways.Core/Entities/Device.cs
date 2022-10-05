@@ -13,7 +13,9 @@
 
         public DateTime Created { get; set; }
 
-        public bool Status { get; set; }
+        public string? Status { get; set; }
+
+        public virtual Gateway? Gateway { get; set; }
     }
 }
 

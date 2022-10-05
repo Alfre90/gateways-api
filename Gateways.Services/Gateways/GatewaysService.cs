@@ -48,7 +48,7 @@ namespace Gateways.Services.Gateways
         {
             try
             {
-                var gateways = _context.Gateways!.AsNoTracking().Include(x => x.Devices);
+                var gateways = _context.Gateways!.AsNoTracking();
                 return await _sieveProcessor.GetPagedAsync<Gateway, GatewayDto>(gateways, sieveModel: query, configurationProvider: _mapper.ConfigurationProvider);
             }
             catch (Exception ex)
@@ -106,7 +106,7 @@ namespace Gateways.Services.Gateways
             {
                 var msg = $"Validation error while adding {nameof(Gateway).ToString().Humanize(LetterCasing.Title)}. See the exception for details.";
                 _logger.LogError(ex, msg);
-                throw ex;
+                throw new ServiceException(ex.Errors.ElementAt(0).ErrorMessage);
             }
             catch (Exception ex)
             {
@@ -144,7 +144,7 @@ namespace Gateways.Services.Gateways
             {
                 var msg = $"Validation error while updating {nameof(Gateway).ToString().Humanize(LetterCasing.Title)}. See the exception for details.";
                 _logger.LogError(ex, msg);
-                throw ex;
+                throw new ServiceException(ex.Errors.ElementAt(0).ErrorMessage);
             }
             catch (Exception ex)
             {

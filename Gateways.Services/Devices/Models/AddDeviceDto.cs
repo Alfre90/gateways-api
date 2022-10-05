@@ -15,6 +15,6 @@ namespace Gateways.Services.Devices.Models
         public string? Vendor { get; set; }
 
         ///<inheritdoc cref="Device.Status"/>
-        public string Status { get; set; }
+        public string? Status { get; set; }
     }
 }

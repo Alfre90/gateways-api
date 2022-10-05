@@ -11,6 +11,7 @@ using Gateways.Services.Devices.Models;
 using Microsoft.EntityFrameworkCore;
 using Gateways.Services.Common.Sieve.Extensions;
 using FluentValidation;
+using Gateways.Services.Common.Validations;
 
 namespace Gateways.Services.Devices
 {
@@ -47,7 +48,7 @@ namespace Gateways.Services.Devices
         {
             try
             {
-                var devices = _context.Devices!.AsNoTracking();
+                var devices = _context.Devices!.AsNoTracking().Include(x => x.Gateway);
                 return await _sieveProcessor.GetPagedAsync<Device, DeviceDto>(devices, sieveModel: query, configurationProvider: _mapper.ConfigurationProvider);
             }
             catch (Exception ex)
@@ -64,7 +65,7 @@ namespace Gateways.Services.Devices
         {
             try
             {
-                var device = await _context.Devices!.AsNoTracking().Where(x => x.Uid.Equals(id)).SingleOrDefaultAsync(cancellation);
+                var device = await _context.Devices!.AsNoTracking().Include(x => x.Gateway).Where(x => x.Uid.Equals(id)).SingleOrDefaultAsync(cancellation);
                 if (device is null)
                 {
                     throw new NotFoundException($"{nameof(Device).ToString().Humanize(LetterCasing.Title)} does not exist.");
@@ -91,19 +92,45 @@ namespace Gateways.Services.Devices
         {
             try
             {
-                var device = _mapper.Map<Device>(dto);
+                using (var context = new GatewaysContext())
+                {
+                    using (var transaction = context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            var device = _mapper.Map<Device>(dto);
 
-                var result = await _context.Devices!.AddAsync(device, cancellation);
-                await _context.SaveChangesAsync(cancellation);
+                            await ValidationUtils.ValidateAndThrow(ValidationUtils.CreateValidationContext(device, true, new string[] { ValidationAction.Add.ToString() }), _validator, cancellation);
 
-                _logger.LogInformation($"{nameof(Device).ToString().Humanize(LetterCasing.Title)} added. Id: '{device!.Uid}'");
-                return await GetById(result.Entity.Uid, cancellation);
+                            var result = await _context.Devices!.AddAsync(device, cancellation);
+                            await _context.SaveChangesAsync(cancellation);
+
+                            var devices = await context.Devices!.Where(x => x.GatewayId.Equals(device.GatewayId)).ToListAsync(cancellation);
+                            if (devices.Count < 10)
+                            {
+                                _logger.LogInformation($"{nameof(Device).ToString().Humanize(LetterCasing.Title)} added. Id: '{device!.Uid}'");
+                                transaction.Commit();
+                                return _mapper.Map<DeviceDto>(result.Entity);
+                            } else
+                            {
+                                transaction.Rollback();
+                                throw new ServiceException("The device can't be added because the gateways already have the maximum allowed devices.");
+                            }
+                        } catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            var msg = $"Service error while adding {nameof(Device).ToString().Humanize(LetterCasing.Title)}. See the exception for details.";
+                            _logger.LogError(ex, msg);
+                            throw new ServiceException(ex.Message);
+                        }
+                    }
+                }
             }
             catch (ValidationException ex)
             {
                 var msg = $"Validation error while adding {nameof(Device).ToString().Humanize(LetterCasing.Title)}. See the exception for details.";
                 _logger.LogError(ex, msg);
-                throw ex;
+                throw new ServiceException(ex.Errors.ElementAt(0).ErrorMessage);
             }
             catch (Exception ex)
             {
@@ -126,6 +153,8 @@ namespace Gateways.Services.Devices
 
                 device = _mapper.Map(dto, device);
 
+                await ValidationUtils.ValidateAndThrow(ValidationUtils.CreateValidationContext(device, true, new string[] { ValidationAction.Update.ToString() }), _validator, cancellation);
+
                 await _context.SaveChangesAsync(cancellation);
                 _logger.LogInformation($"{nameof(Device).ToString().Humanize(LetterCasing.Title)} updated. Id: '{device!.Uid}'");
             }
@@ -139,7 +168,7 @@ namespace Gateways.Services.Devices
             {
                 var msg = $"Validation error while updating {nameof(Device).ToString().Humanize(LetterCasing.Title)}. See the exception for details.";
                 _logger.LogError(ex, msg);
-                throw ex;
+                throw new ServiceException(ex.Errors.ElementAt(0).ErrorMessage);
             }
             catch (Exception ex)
             {

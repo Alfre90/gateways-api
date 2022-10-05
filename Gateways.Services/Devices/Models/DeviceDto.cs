@@ -1,5 +1,6 @@
 ﻿using Gateways.Core.Entities;
 using Gateways.Services.Common.Models;
+using Gateways.Services.Gateways.Models;
 
 namespace Gateways.Services.Devices.Models
 {
@@ -18,6 +19,9 @@ namespace Gateways.Services.Devices.Models
         public DateTime Created { get; set; }
 
         ///<inheritdoc cref="Device.Status"/>
-        public bool Status { get; set; }
+        public string? Status { get; set; }
+
+        ///<inheritdoc cref="Device.Gateway"/>
+        public GatewayDto? Gateway { get; set; }
     }
 }

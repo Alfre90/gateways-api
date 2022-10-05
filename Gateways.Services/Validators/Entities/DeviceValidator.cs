@@ -20,6 +20,12 @@ namespace Gateways.Services.Validators.Entities
 
             RuleSet(nameof(ValidationAction.Add), () =>
             {
+                RuleFor(x => x.GatewayId)
+                   .NotNull()
+                   .MustAsync(async (id, cancellation) =>
+                   {
+                       return await _dbContext.Gateways!.AnyAsync(x => x.Id.Equals(id), cancellation);
+                   }).WithMessage("Gateway does not exist.");
             });
 
             RuleSet(nameof(ValidationAction.Update), () =>
