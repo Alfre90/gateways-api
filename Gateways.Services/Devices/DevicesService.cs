@@ -106,7 +106,7 @@ namespace Gateways.Services.Devices
                             await _context.SaveChangesAsync(cancellation);
 
                             var devices = await context.Devices!.Where(x => x.GatewayId.Equals(device.GatewayId)).ToListAsync(cancellation);
-                            if (devices.Count < 10)
+                            if (devices.Count <= 10)
                             {
                                 _logger.LogInformation($"{nameof(Device).ToString().Humanize(LetterCasing.Title)} added. Id: '{device!.Uid}'");
                                 transaction.Commit();

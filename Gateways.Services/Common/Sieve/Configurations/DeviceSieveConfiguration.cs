@@ -11,6 +11,8 @@ namespace Gateways.Services.Common.Sieve.Configurations
                 .CanFilter();
             mapper.Property<Device>(x => x.Vendor)
                 .CanFilter();
+            mapper.Property<Device>(x => x.Status)
+                .CanFilter();
         }
     }
 }

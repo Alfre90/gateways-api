@@ -19,7 +19,7 @@ namespace Gateways.Services.Devices.Models
         public DateTime Created { get; set; }
 
         ///<inheritdoc cref="Device.Status"/>
-        public string? Status { get; set; }
+        public bool Status { get; set; }
 
         ///<inheritdoc cref="Device.Gateway"/>
         public GatewayDto? Gateway { get; set; }
