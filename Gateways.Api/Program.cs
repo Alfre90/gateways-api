@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var env = builder.Environment;
 
+builder.WebHost.UseKestrel();
+
 //FluentValidation config
 ValidatorOptions.Global.LanguageManager.Enabled = false;
 
@@ -37,11 +39,11 @@ services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-if (env.IsDevelopment())
-{
+// if (env.IsDevelopment())
+// {
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+// }
 
 // Configure the HTTP request pipeline.
 app.UseStatusCodePages();

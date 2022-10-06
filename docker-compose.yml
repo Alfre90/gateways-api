@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  gateways.api:
+    image: ranses/gatewaysapi
+    build:
+      context: .
+      dockerfile: Gateways.Api\Dockerfile
